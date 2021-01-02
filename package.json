@@ -1,14 +1,17 @@
 {
-  "name": "create-app",
+  "homepage": "https://paulicz44.github.io/Bang-Calc/",
+  "name": "BANG-score-calculator",
   "version": "1.0.0",
-  "description": "A boilerplate",
+  "description": "React app for borad game BANG!, thtah can automaticly calculate score after game ended",
   "main": "index.js",
   "scripts": {
     "dev": "cross-env NODE_ENV=development nodemon index.js",
     "start": "cross-env NODE_ENV=production node index.js",
     "build": "webpack --mode=production",
     "lint": "eslint .",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -b master -d static"
   },
   "engines": {
     "node": ">=10.15"
@@ -39,6 +42,7 @@
     "express-async-errors": "^3.1.1",
     "fibers": "^4.0.2",
     "file-loader": "^5.0.2",
+    "gh-pages": "^3.1.0",
     "html-webpack-plugin": "^3.2.0",
     "mini-css-extract-plugin": "^0.9.0",
     "module-alias": "^2.2.2",
