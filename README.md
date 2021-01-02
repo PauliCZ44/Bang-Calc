@@ -2,6 +2,9 @@
 
 This is a calculator for score in board game BANG!. This scoring system is based on the Official tournament scoring system. At the end of each game, each player gains an amount of points based on that table. It is not important who eliminated a specific player.
 
+## Link to app:
+#### https://bangcalc.netlify.app/
+
 ### Functionaliy:
 
 - Calculate score for 2-8 players
