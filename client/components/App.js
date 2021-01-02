@@ -8,7 +8,7 @@ export default () => (
   <>
     <Helmet>
       <meta charSet="utf-8" />
-      <title lang="en">BANG! CALC: Score calculator for BANG! </title>
+      <title lang="en">BANG!-CALC: Score calculator for BANG!</title>
       <meta
         name="description"
         content="Calculator for score in board game BANG! based on official scoring table. You can calculate score in real time in table. Bang! is a card game released by DV Giochi in 2002. The game is known worldwide as Bang!, except in France, where it was known as Wanted!. This scoring system is based on this Official tournament scoring system."
