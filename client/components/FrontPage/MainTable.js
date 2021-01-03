@@ -12,7 +12,7 @@ const MainTable = ({
 
   return (
     <div className="container-xl mt-md-5 max-width-94p">
-      <h5 className="text-center">Result table</h5>
+      <h5 className="text-center western-font-only">Result table</h5>
       <div className="table-responsive">
         <table className="table table-bordered align-middle">
           <thead className="thead-light">

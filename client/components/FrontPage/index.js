@@ -1,10 +1,11 @@
 
 import React, { useState, useEffect, useRef } from 'react'
+import numeral from 'numeral'
+import { TrophyFill } from 'react-bootstrap-icons'
 import MainTable from './MainTable'
-import arrayEquals from '../../util/helpers'
+import { arrayEquals, useStickyState } from '../../util/helpers'
 import UISection from './UISection'
 import Intro from './Intro'
-
 
 class Player {
   constructor(name, id, roles, scores, deaths, duels) {
@@ -19,7 +20,6 @@ class Player {
 }
 
 const FrontPage = () => {
-  // TODO - počítat skore okamžite. Možná odstranit updaty players a přidat hook ? Nevím.
   const possibleRoles = [
     ['invalid'],
     ['invalid'],
@@ -31,26 +31,22 @@ const FrontPage = () => {
     ['Sheriff', 'Renegade', 'Outlaw', 'Outlaw', 'Deputy', 'Outlaw', 'Deputy'],
     ['Sheriff', 'Renegade', 'Outlaw', 'Outlaw', 'Deputy', 'Outlaw', 'Deputy', 'Renegade'],
   ]
-  // Dumy data
-  const [players, setPlayers] = useState([
-    new Player('Player_1', 1, [possibleRoles[5][0]], [0], [false], [false]),
-    new Player('Player_2', 2, [possibleRoles[5][1]], [0], [false], [false]),
-    new Player('Player_3', 3, [possibleRoles[5][2]], [0], [false], [false]),
-    new Player('Player_4', 4, [possibleRoles[5][3]], [0], [false], [false]),
-    new Player('Player_5', 5, [possibleRoles[5][4]], [0], [false], [false]),
-  ])
-  const [rounds, setRounds] = useState(1)
-  const [endedRounds, setEndedRounds] = useState([0])
-  // const [assignedRoles, setAssignedRoles] = useState([])
-  const [roles, setRoles] = useState(possibleRoles[players.length])
+  const [players, setPlayers] = useStickyState([
+    new Player('Player 1', 1, [possibleRoles[5][0]], [0], [false], [false]),
+    new Player('Player 2', 2, [possibleRoles[5][1]], [0], [false], [false]),
+    new Player('Player 3', 3, [possibleRoles[5][2]], [0], [false], [false]),
+    new Player('Player 4', 4, [possibleRoles[5][3]], [0], [false], [false]),
+    new Player('Player 5', 5, [possibleRoles[5][4]], [0], [false], [false]),
+  ], 'players')
+  const [rounds, setRounds] = useStickyState(1, 'rounds-played')
+  const [endedRounds, setEndedRounds] = useStickyState([0], 'endedRounds')
+  const [roles, setRoles] = useStickyState(possibleRoles[players.length], 'roles')
   const [message, setMessage] = useState('')
   const [messageIsError, setMessageIsError] = useState(false)
 
   // MESSAGE FUNCTIONS //
-
   // messages clear timeout with help of: https://stackoverflow.com/questions/56597788/how-to-do-timeout-and-then-clear-timeout-in-react-functional-component
   const timerRef = useRef(null)
-
   const makeAndRemoveMessage = (text = '-', seconds = 3, error = false) => {
     if (timerRef.current) {
       clearTimeout(timerRef.current)
@@ -65,7 +61,6 @@ const FrontPage = () => {
   }
   // MESSAGE FUNCTIONS ENDS //
 
-
   const checkRightRolesIn = (round) => {
     const rightRoles = [...roles]
     rightRoles.sort()
@@ -73,7 +68,6 @@ const FrontPage = () => {
     selectedRoles.sort()
     return arrayEquals(rightRoles, selectedRoles)
   }
-
 
   const computeTotalScores = (pla) => {
     // console.log('computeTotalScores called')
@@ -147,7 +141,6 @@ const FrontPage = () => {
     makeAndRemoveMessage('Round added !', 3, false)
   }
 
-
   // remove round, update players and remove last role from them
   const removeRound = () => {
     if (rounds > 1) {
@@ -176,7 +169,6 @@ const FrontPage = () => {
     }
   }
 
-
   const computeScores = (r) => {
     const bandits = players.filter((p) => p.roles[r] === 'Outlaw')
     const outlawCount = players.filter((p) => p.roles[r] === 'Outlaw').length
@@ -184,15 +176,16 @@ const FrontPage = () => {
     const newPlayers = [...players]
     const renegadeHadDuels = players.filter((p) => p.roles[r] === 'Renegade' && p.duels[r] === true).length
     if (renegadeHadDuels === 2) {
-      makeAndRemoveMessage(`WARRNING: Only one renegade should be in duel with sheriff in round ${r}, results may be wrong !`, 3, true)
+      makeAndRemoveMessage(`WARNING: Only one renegade should be in duel with sheriff in round ${parseInt(r) + 1}, results may be wrong !`, 3, true)
     }
     // console.log(renegadeHadDuel)
     const n = players.length
-    // if LAW wins
+
     const deadPlayers = players.filter((p) => p.deaths[r] === true)
     if (deadPlayers.length === players.length) {
-      makeAndRemoveMessage(`WARRNING: All players are dead in round ${r}, results may be wrong !`, 3, true)
+      makeAndRemoveMessage(`WARNING: All players are dead in round ${parseInt(r) + 1}, results may be wrong !`, 3, true)
     }
+
     // IF LAW  wins
     if (endedRounds[r] === 2) {
       for (let i = 0; i < n; i++) {
@@ -226,7 +219,8 @@ const FrontPage = () => {
         }
       }
       computeTotalScores(newPlayers)
-      // else if renegade wins
+
+      // else if RENEGADE wins
     } else if (endedRounds[r] === 1 && bandits.every((b) => b.deaths[r] === true)) {
       // console.log('else if renegade wins')
       for (let i = 0; i < n; i++) {
@@ -251,7 +245,8 @@ const FrontPage = () => {
         }
       }
       computeTotalScores(newPlayers)
-      // else if bandits wins
+
+      // else if BANDITS wins
     } else if (endedRounds[r] === 1) {
       // console.log(' else if bandits wins')
       for (let i = 0; i < n; i++) {
@@ -280,7 +275,8 @@ const FrontPage = () => {
         }
       }
       computeTotalScores(newPlayers)
-    // else if noone wins
+
+    // else if NO ONE wins
     } else if (endedRounds[r] === 0) {
       newPlayers.forEach((p) => {
         // eslint-disable-next-line no-param-reassign
@@ -377,7 +373,7 @@ const FrontPage = () => {
   const computeAllScores = () => {
     for (let i = 0; i < rounds; i++) {
       if (!checkRightRolesIn(i)) {
-        makeAndRemoveMessage(`Roles in round ${i + 1} are wrongly assigned. Computed score may be wrong !`, 4, true)
+        makeAndRemoveMessage(`Roles in round ${parseInt(i) + 1} are wrongly assigned. Calculated score may be wrong !`, 4, true)
       }
       computeScores([i])
     }
@@ -389,15 +385,43 @@ const FrontPage = () => {
     computeAllScores()
   }, [endedRounds])
 
+  const clearData = () => {
+    // eslint-disable-next-line no-alert
+    if (window.confirm('Do you really want to delete all your data from the table and from local storage? All names, points, roles will be lost!')) {
+      localStorage.clear()
+      window.location.reload()
+    } else {
+      console.log('not deleted')
+    }
+  }
 
-  // TODO - list of players sorted by score. Then rendered under table
+
   let listOfPlayers = [...players]
-  listOfPlayers = listOfPlayers.sort((a, b) => b.totalScore - a.totalScore).map((p, index) => (
-    <li className="list-group-item d-flex justify-content-between align-items-center font-weight-bold" key={p.id}>
-      {`${index + 1}. ${p.name}`}
-      <span className="badge badge-light badge-pill">{p.totalScore}</span>
-    </li>
-  ))
+  listOfPlayers = listOfPlayers.sort((a, b) => b.totalScore - a.totalScore).map((p, index) => {
+    let hxClass = 'h6'
+    if (index === 0) {
+      hxClass = 'h3'
+    } else if (index === 1) {
+      hxClass = 'h4'
+    } else if (index === 2) {
+      hxClass = 'h5'
+    }
+    return (
+      <li className={`${hxClass} list-group-item d-flex justify-content-between align-items-center font-weight-bold`} key={p.id}>
+        <span>
+          {`${index + 1}. ${p.name}`}
+          {' '}
+          {index === 0 ? <TrophyFill className="pb-2" size={50} color="gold" /> : null}
+          {index === 1 ? <TrophyFill className="pb-2" size={40} color="silver" /> : null}
+          {index === 2 ? <TrophyFill className="pb-2" size={30} color="#cd7f32" /> : null}
+        </span>
+
+        <span className={hxClass}>
+          {numeral(p.totalScore).format('$ 0,0')}
+        </span>
+      </li>
+    )
+  })
 
   return (
     <div className="wooden-bg-body">
@@ -432,8 +456,17 @@ const FrontPage = () => {
           >
             <span className="western-font black-text text-center">Check manualy</span>
           </button>
+          <div className="text-center">
+            <button
+              type="button"
+              className="btn btn-sm btn-outline-light wooden-bg opacity-effect mb-3 mt-5 px-3 px-md-5 shadow-grey"
+              onClick={() => clearData()}
+            >
+              <span className="western-font-red text-center">Clear data</span>
+            </button>
+          </div>
           <div className="py-3 pb-5 py-md-5">
-            <h5 className="mt-3 py-3 text-center">All players by score:</h5>
+            <h5 className="mt-3 py-3 text-center western-font-only">All players by score:</h5>
             <ul className="list-group mx-md-3 mx-lg-5">
               {listOfPlayers}
             </ul>

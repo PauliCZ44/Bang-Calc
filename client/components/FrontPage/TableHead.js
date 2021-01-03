@@ -6,7 +6,7 @@ const TableHead = ({ rounds }) => {
     for (let i = 0; i < num; i++) {
       ths.push(
         <th colSpan="3" key={`round${i}`} className="text-center right-border-bold">
-          {`Round ${i + 1}`}
+          {`Round ${parseInt(i) + 1}`}
         </th>,
       )
     }

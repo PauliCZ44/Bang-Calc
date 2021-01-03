@@ -4,6 +4,7 @@ import {
 } from '../Icons/MyIcons'
 import Notification from '../Notification'
 
+
 /* eslint-disable jsx-a11y/label-has-associated-control */
 const UISection = ({
   removePlayer, addPlayer, removeRound, addRound, rounds, players, message, messageIsError,

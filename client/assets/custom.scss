@@ -29,6 +29,10 @@ body {
   text-align: justify;
 }
 
+.text-align-r {
+  text-align: right !important;
+}
+
 .footer {
   background-color: $mainColor;
   img {
@@ -197,11 +201,22 @@ select:hover {
 }
 
 .western-font {
-  text-shadow: 0 0 1px black, 0 0 1px black, 0 0 1px black, 0 0 1px black;
+  text-shadow: 0 0.5px rgb(34, 34, 34), 0 0.5px rgb(34, 34, 34),
+    0 0.5px rgb(34, 34, 34), 0 0.5px rgb(34, 34, 34), 0 0.5px rgb(34, 34, 34),
+    0 0.5px rgb(34, 34, 34);
   font-size: 2rem;
   font-weight: 500;
   letter-spacing: 0.1rem;
   font-family: Perdido;
+}
+
+.western-font-red {
+  font-size: 1.5rem;
+  font-weight: 500;
+  letter-spacing: 0.15rem;
+  font-family: Perdido;
+  color: rgb(192, 0, 0);
+  text-shadow: 0 0 1px black, 0 0 1px black, 0 0 1px gray, 0 0 1px gray;
 }
 
 .western-font-big {
@@ -209,9 +224,16 @@ select:hover {
 }
 
 .western-font-small {
+  font-family: Perdido;
   text-shadow: none;
   font-weight: 400;
   font-size: 1rem;
+}
+
+.western-font-only {
+  font-family: Perdido;
+  letter-spacing: 0.15rem;
+  text-shadow: 0 0 1px black, 0 0 1px black, 0 0 1px gray, 0 0 1px gray;
 }
 
 .black-text {

@@ -4,6 +4,7 @@ import Togglable from '../Togglable'
 import RIP from '../../assets/img/RIP.png'
 import Duel from '../../assets/img/Duel.png'
 
+
 const Intro = () => (
   <section className="container-sm max-width-800">
     <p className="py-3 py-md-5 text-align-justify">

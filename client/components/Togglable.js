@@ -6,6 +6,7 @@ const Togglable = (props) => {
   const hideWhenVisible = { display: visible ? 'none' : '' }
   const showWhenVisible = { display: visible ? '' : 'none' }
 
+
   const toggleVisibility = () => {
     setVisible(!visible)
   }
@@ -21,7 +22,9 @@ const Togglable = (props) => {
           onClick={toggleVisibility}
           className="btn btn-md btn-light btn-block border border-dark wooden-bg-light western-font western-font-small"
         >
-          <span className="font-weight-bold">{props.buttonLabel}</span>
+          <span className="font-weight-bold">
+            {props.buttonLabel}
+          </span>
         </button>
       </div>
       <div style={showWhenVisible}>
