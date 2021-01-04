@@ -8,14 +8,11 @@ import Duel from '../../assets/img/Duel.png'
 const PlayerRow = ({
   player, rounds, roles, changeRole, changeName, makeDead, makeDuel,
 }) => {
-  // const [availableRoles, setAvailableRoles] = useState([...roles])
-  // Params e - event, id = player.id, round = in which round is change made (rounds zero indexed)
   const handleChangeOption = (e, id, round) => {
     // console.log('Option changed to:', e.target.value, 'in player ID ==', id, ' in round', round)
     changeRole(e.target.value, id, round)
-    // TODO change aray of roles in player after change in input
   }
-  // tds = cells for each player and each row
+
   const MakeDuelIcon = (i) => (
     <>
       <input type="checkbox" id={`IsDuel-P:${player.id}-R:${i}`} className="checkbox-for-dead" checked={player.duels[i]} onChange={(e) => makeDuel(e, player.id, i)} />
@@ -24,6 +21,14 @@ const PlayerRow = ({
       </label>
     </>
   )
+
+  const emojis = {
+    Renegade: '🤠',
+    Sheriff: '👮',
+    Deputy: '⭐',
+    Outlaw: '🧔',
+  }
+  // tds = cells for each player and each row
   const tds = []
   const makeRounds = (num) => {
     let duel
@@ -39,7 +44,9 @@ const PlayerRow = ({
               {/* Set options to select for each cell */}
               {roles.map((r, index) => (
                 // eslint-disable-next-line react/no-array-index-key
-                <option key={`P:${player.id}-R:${i}-Rl:${r}${index}`} value={roles[index]}>{r}</option>
+                <option key={`P:${player.id}-R:${i}-Rl:${r}${index}`} value={r}>
+                  {emojis[roles[index]] + r}
+                </option>
               ))}
             </Form.Control>
           </td>

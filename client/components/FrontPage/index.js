@@ -45,7 +45,7 @@ const FrontPage = () => {
   const [messageIsError, setMessageIsError] = useState(false)
 
   // MESSAGE FUNCTIONS //
-  // messages clear timeout with help of: https://stackoverflow.com/questions/56597788/how-to-do-timeout-and-then-clear-timeout-in-react-functional-component
+  // messages clear timeout with help from: https://stackoverflow.com/questions/56597788/how-to-do-timeout-and-then-clear-timeout-in-react-functional-component
   const timerRef = useRef(null)
   const makeAndRemoveMessage = (text = '-', seconds = 3, error = false) => {
     if (timerRef.current) {
@@ -61,6 +61,7 @@ const FrontPage = () => {
   }
   // MESSAGE FUNCTIONS ENDS //
 
+  // Checks if roles are correctly assigned. Returns true / false
   const checkRightRolesIn = (round) => {
     const rightRoles = [...roles]
     rightRoles.sort()
@@ -69,6 +70,7 @@ const FrontPage = () => {
     return arrayEquals(rightRoles, selectedRoles)
   }
 
+  // Calculate total score for individual player, based on scores for each round. Does not return anything, but sets the state of players
   const computeTotalScores = (pla) => {
     // console.log('computeTotalScores called')
     const newPlayers = [...pla]
@@ -176,14 +178,14 @@ const FrontPage = () => {
     const newPlayers = [...players]
     const renegadeHadDuels = players.filter((p) => p.roles[r] === 'Renegade' && p.duels[r] === true).length
     if (renegadeHadDuels === 2) {
-      makeAndRemoveMessage(`WARNING: Only one renegade should be in duel with sheriff in round ${parseInt(r) + 1}, results may be wrong !`, 3, true)
+      makeAndRemoveMessage(`WARNING: Only one renegade should be in duel with sheriff in round ${parseInt(r, 10) + 1}, results may be wrong !`, 3, true)
     }
     // console.log(renegadeHadDuel)
     const n = players.length
 
     const deadPlayers = players.filter((p) => p.deaths[r] === true)
     if (deadPlayers.length === players.length) {
-      makeAndRemoveMessage(`WARNING: All players are dead in round ${parseInt(r) + 1}, results may be wrong !`, 3, true)
+      makeAndRemoveMessage(`WARNING: All players are dead in round ${parseInt(r, 10) + 1}, results may be wrong !`, 3, true)
     }
 
     // IF LAW  wins
@@ -305,17 +307,15 @@ const FrontPage = () => {
         }
       }
 
+      // Check if sheriff is dead, else chcek if all bandidts and renegades are death. 1-Law wins / 2-Bandits wins / 0-Round is not ended
       if (SheriffDead) {
-        // console.log(`Round ${i} ended`)
         newendedRounds.push(1)
       } else if (BanditsAndRenegadeDead) {
         newendedRounds.push(2)
       } else {
-        // console.log(`Round ${i} continues`)
         newendedRounds.push(0)
       }
     }
-    // console.log(arrayEquals(newendedRounds, endedRounds))
     setEndedRounds(newendedRounds)
     return (newendedRounds)
   }
@@ -329,12 +329,10 @@ const FrontPage = () => {
     // remove 1 element on index "round" and insert new option
     newRoles.splice(round, 1, option)
     newDuels.splice(round, 1, false)
-    // console.log('NewRoles', newRoles)
     playerToUpdate.roles = newRoles
     playerToUpdate.duels = newDuels
     // If the player is the one to be changed, insert playerToUpdate, else insert old value
     const newPlayers = players.map((p) => (p.id === playerToUpdate.id ? playerToUpdate : p))
-    // computeTotalScores(newPlayers)
     checkIfRoundsOver()
     return newPlayers
   }
@@ -345,7 +343,6 @@ const FrontPage = () => {
     newDeaths.splice(round, 1, !newDeaths[round])
     playerToUpdate.deaths = newDeaths
     const newPlayers = players.map((p) => (p.id === playerToUpdate.id ? playerToUpdate : p))
-    // computeTotalScores(newPlayers)
     checkIfRoundsOver()
     return newPlayers
   }
@@ -357,7 +354,6 @@ const FrontPage = () => {
     newDuels.splice(round, 1, !newDuels[round])
     playerToUpdate.duels = newDuels
     const newPlayers = players.map((p) => (p.id === playerToUpdate.id ? playerToUpdate : p))
-    // computeTotalScores(newPlayers)
     checkIfRoundsOver()
     return newPlayers
   }
@@ -373,7 +369,7 @@ const FrontPage = () => {
   const computeAllScores = () => {
     for (let i = 0; i < rounds; i++) {
       if (!checkRightRolesIn(i)) {
-        makeAndRemoveMessage(`Roles in round ${parseInt(i) + 1} are wrongly assigned. Calculated score may be wrong !`, 4, true)
+        makeAndRemoveMessage(`Roles in round ${parseInt(i, 10) + 1} are wrongly assigned. Calculated score may be wrong !`, 4, true)
       }
       computeScores([i])
     }
@@ -381,17 +377,16 @@ const FrontPage = () => {
 
 
   useEffect(() => {
-    // this effect wathes endedRounds. If end is changed do computations (in reality, I also do computations when endedRound do not change, because score can be hanged for only 1 player.)
+    // this effect watches endedRounds. If end is changed do computations (in reality, I also do computations when endedRound do not change, because score can be hanged for only 1 player.)
     computeAllScores()
   }, [endedRounds])
 
   const clearData = () => {
+    // Clear data from local storage and reload the page.
     // eslint-disable-next-line no-alert
     if (window.confirm('Do you really want to delete all your data from the table and from local storage? All names, points, roles will be lost!')) {
       localStorage.clear()
       window.location.reload()
-    } else {
-      console.log('not deleted')
     }
   }
 
@@ -399,6 +394,7 @@ const FrontPage = () => {
   let listOfPlayers = [...players]
   listOfPlayers = listOfPlayers.sort((a, b) => b.totalScore - a.totalScore).map((p, index) => {
     let hxClass = 'h6'
+    // change size of text based on index. First player has biggest text...
     if (index === 0) {
       hxClass = 'h3'
     } else if (index === 1) {
@@ -466,7 +462,7 @@ const FrontPage = () => {
             </button>
           </div>
           <div className="py-3 pb-5 py-md-5">
-            <h5 className="mt-3 py-3 text-center western-font-only">All players by score:</h5>
+            <h4 className="mt-3 py-3 text-center western-font-only">All players by score</h4>
             <ul className="list-group mx-md-3 mx-lg-5">
               {listOfPlayers}
             </ul>

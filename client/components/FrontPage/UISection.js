@@ -12,7 +12,6 @@ const UISection = ({
   const iconSize = 28
   return (
     <div className="container-sm max-width-800">
-      <div className="form-group" />
       <div className="text-center pt-3 pt-md-4">
         <label htmlFor="playerNumber" className="text-center h5">
           Number of players:
@@ -41,7 +40,6 @@ const UISection = ({
       </div>
 
 
-      <div className="form-group text-center" />
       <div className="text-center">
         <label htmlFor="rounds" className="text-center h5 mx-auto">
           Number of rounds:
