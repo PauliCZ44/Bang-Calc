@@ -32,16 +32,26 @@ const MainTable = ({ players, rounds, roles, changeRole, changeName, makeDead, m
 		e.preventDefault()
 		e.dataTransfer.effectAllowed = 'move'
 		e.dataTransfer.dropEffect = 'move'
+		e.target.style.border = '2px solid #353a40'
 		roundDrop.current = round
 		dropOnPlayer.current = playerId
 	}
 
+	const handleDragLeave = (e) => {
+		e.preventDefault()
+		console.log('DRag leave')
+		e.target.style.border = '2px solid transparent'
+	}
+
 	const handleDrop = (e) => {
+		console.log('drop')
 		if (currentRound.current !== roundDrop.current) {
 			console.warn('You can only drop in the same round')
 			e.preventDefault()
 			return
 		} else {
+			console.log(e)
+			e.target.style.border = '2px solid transparent'
 			switchRoles(draggedPlayer.current, dropOnPlayer.current, currentRound.current)
 		}
 	}
@@ -52,6 +62,7 @@ const MainTable = ({ players, rounds, roles, changeRole, changeName, makeDead, m
 			dragOverItem={dropOnPlayer}
 			handleDragStart={handleDragStart}
 			handleDragEnter={handleDragEnter}
+			handleDragLeave={handleDragLeave}
 			player={player}
 			rounds={rounds}
 			key={player.id}

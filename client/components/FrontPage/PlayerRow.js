@@ -20,6 +20,7 @@ const PlayerRow = ({
 	makeDuel,
 	handleDragStart,
 	handleDragEnter,
+	handleDragLeave,
 	handleDrop,
 }) => {
 	const [draggingRoundIndex, setDraggingRoundIndex] = React.useState(-1)
@@ -61,19 +62,17 @@ const PlayerRow = ({
 								setDraggingRoundIndex(currentRound)
 							}}
 							onDragEnd={(e) => {
+								e.target.style.border = '2px solid transparent'
 								setDraggingRoundIndex(-1)
 								handleDrop(e)
-								e.target.style.backgroundColor = ''
 							}}
 							onDragOver={(e) => {
 								e.preventDefault()
 								e.dataTransfer.dropEffect = 'move'
-								// e.target.style.backgroundColor = '#cacaca'
 							}}
-							onDragLeave={(e) => {
-								e.target.style.backgroundColor = ''
-							}}
+							onDragLeave={handleDragLeave}
 							onDragEnter={(e) => handleDragEnter(e, player.id, currentRound)}
+							onMouseLeave={(e) => (e.target.style.border = '2px solid transparent')}
 						>
 							{player.roles[i] + ' ' + emojis[player.roles[i]]}
 						</div>
