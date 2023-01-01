@@ -2,6 +2,7 @@ import React, { useRef } from 'react'
 import numeral from 'numeral'
 import RIP from '../../assets/img/RIP.png'
 import Duel from '../../assets/img/Duel.png'
+import { useAutoAnimate } from '@formkit/auto-animate/react'
 
 export const emojis = {
 	Renegade: '🤠',
@@ -21,12 +22,8 @@ const PlayerRow = ({
 	handleDragEnter,
 	handleDrop,
 }) => {
-	const handleChangeOption = (e, id, round) => {
-		// console.log('Option changed to:', e.target.value, 'in player ID ==', id, ' in round', round)
-		changeRole(e.target.value, id, round)
-	}
-
 	const [draggingRoundIndex, setDraggingRoundIndex] = React.useState(-1)
+	const [parent] = useAutoAnimate(/* optional config */)
 
 	const MakeDuelIcon = (i) => (
 		<>
@@ -80,9 +77,6 @@ const PlayerRow = ({
 						>
 							{player.roles[i] + ' ' + emojis[player.roles[i]]}
 						</div>
-						{/* Render arrows down / up to change order */}
-						{/* <span className="arrow">🔼</span>
-						<span className="arrow">🔽</span> */}
 					</td>
 					<td className="zero-padding-y min-width-120 text-center">
 						<input
@@ -108,7 +102,7 @@ const PlayerRow = ({
 	makeRounds(rounds)
 
 	return (
-		<tr>
+		<tr ref={parent}>
 			<th className="table-dark th-input-dark" key={player.id}>
 				<input
 					type="text"
@@ -125,19 +119,3 @@ const PlayerRow = ({
 	)
 }
 export default PlayerRow
-
-//<Form.Control
-// //value={player.roles[i]}
-// as="select"
-// custom
-// id={`P${player.id}-R${i}`}
-// className="select-role-option"
-// onChange={(e) => handleChangeOption(e, player.id, i)}
-// >
-// {/* Set options to select for each cell */}
-// {roles.map((r, index) => (
-// 	<option key={`P:${player.id}-R:${i}-Rl:${r}${index}`} value={r}>
-// 		{emojis[roles[index]] + r}
-// 	</option>
-// ))}
-// </Form.Control>

@@ -51,6 +51,10 @@ body {
 	}
 }
 
+.score-table li {
+	animation: opacity 0.5s ease-in-out;
+}
+
 .select-role-option {
 	padding: 4px 20px 4px 2px !important;
 	min-width: 100px;
@@ -382,6 +386,15 @@ select:hover {
 	to {
 		opacity: 1;
 		transform: scale(1);
+	}
+}
+
+@keyframes opacity {
+	from {
+		opacity: 0.5;
+	}
+	to {
+		opacity: 1;
 	}
 }
 

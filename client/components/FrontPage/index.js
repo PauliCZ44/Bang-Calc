@@ -48,8 +48,6 @@ function getMedal(placement) {
 
 const FrontPage = () => {
 	const [players, setPlayers] = useStickyState(INITIAL_PLAYERS, 'players')
-	console.log(INITIAL_PLAYERS)
-	console.log(players)
 	const [rounds, setRounds] = useStickyState(1, 'rounds-played')
 	const [endedRounds, setEndedRounds] = useStickyState([0], 'endedRounds')
 	const [roles, setRoles] = useStickyState(POSSIBLE_ROLES[players.length], 'roles')
@@ -353,7 +351,7 @@ const FrontPage = () => {
 		return newendedRounds
 	}
 
-	// function to change state of player. In his roles[] i store all roles that he played
+	// function to change state of player. In his roles[], all roles that he played are stored
 	const changeRole = (option, playerId, round) => {
 		const playerToUpdate = players.filter((pl) => pl.id === playerId)[0]
 		// create new array
@@ -432,7 +430,7 @@ const FrontPage = () => {
 		}
 	}
 
-	const [parent] = useAutoAnimate()
+	const [parent] = useAutoAnimate({ duration: 450 })
 
 	const listOfPlayers = [...players]
 		.sort((a, b) => b.totalScore - a.totalScore)
@@ -505,7 +503,7 @@ const FrontPage = () => {
 					</div>
 					<div className="py-3 pb-5 py-md-5">
 						<h4 className="mt-3 py-3 text-center western-font-only">All players by score</h4>
-						<ul ref={parent} className="list-group mx-md-3 mx-lg-5">
+						<ul ref={parent} className="list-group mx-md-3 mx-lg-5 score-table">
 							{listOfPlayers}
 						</ul>
 					</div>

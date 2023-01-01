@@ -3,21 +3,24 @@ import PlayerRow from './PlayerRow'
 import TableHead from './TableHead'
 
 const MainTable = ({ players, rounds, roles, changeRole, changeName, makeDead, makeDuel }) => {
-	const dragItem = useRef()
-	const dragOverItem = useRef()
+	const draggedRole = useRef()
+	const draggedPlayer = useRef()
+	const dropOnPlayer = useRef()
 	const currentRound = useRef()
 	const roundDrop = useRef()
 
 	const switchRoles = (id1, id2, round) => {
-		console.log(players)
-		// changeRole()
+		const role1 = draggedRole.current
+		const role2 = players.find((player) => player.id === id2).roles[round - 1]
+		changeRole(role2, id1, round - 1)
+		changeRole(role1, id2, round - 1)
 	}
 
 	const handleDragStart = (e, playerId, round) => {
 		e.dataTransfer.effectAllowed = 'move'
 		currentRound.current = round
-		dragItem.current = playerId
-		console.log('START', playerId, round)
+		draggedPlayer.current = playerId
+		draggedRole.current = players.find((player) => player.id === playerId).roles[round - 1]
 	}
 
 	const handleDragEnter = (e, playerId, round) => {
@@ -30,8 +33,7 @@ const MainTable = ({ players, rounds, roles, changeRole, changeName, makeDead, m
 		e.dataTransfer.effectAllowed = 'move'
 		e.dataTransfer.dropEffect = 'move'
 		roundDrop.current = round
-		dragOverItem.current = playerId
-		console.log('enter', playerId, round)
+		dropOnPlayer.current = playerId
 	}
 
 	const handleDrop = (e) => {
@@ -40,16 +42,14 @@ const MainTable = ({ players, rounds, roles, changeRole, changeName, makeDead, m
 			e.preventDefault()
 			return
 		} else {
-			console.log('DROP', dragItem.current, dragOverItem.current, currentRound.current)
-			console.log(e.target)
-			switchRoles(dragItem.current, dragOverItem.current, currentRound.current)
+			switchRoles(draggedPlayer.current, dropOnPlayer.current, currentRound.current)
 		}
 	}
 
 	const playerRows = players.map((player) => (
 		<PlayerRow
-			dragItem={dragItem}
-			dragOverItem={dragOverItem}
+			dragItem={draggedPlayer}
+			dragOverItem={dropOnPlayer}
 			handleDragStart={handleDragStart}
 			handleDragEnter={handleDragEnter}
 			player={player}
