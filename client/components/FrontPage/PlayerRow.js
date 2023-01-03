@@ -66,6 +66,7 @@ const PlayerRow = ({
 								setDraggingRoundIndex(-1)
 								handleDrop(e)
 							}}
+							onAnimationEnd={(e) => (e.target.classList = 'draggable-role')}
 							onDragOver={(e) => {
 								e.preventDefault()
 								e.dataTransfer.dropEffect = 'move'

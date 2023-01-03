@@ -2,12 +2,25 @@ import React, { useRef } from 'react'
 import PlayerRow from './PlayerRow'
 import TableHead from './TableHead'
 
-const MainTable = ({ players, rounds, roles, changeRole, changeName, makeDead, makeDuel }) => {
+const MainTable = ({
+	players,
+	rounds,
+	roles,
+	changeRole,
+	changeName,
+	makeDead,
+	makeDuel,
+	setPlayers,
+	checkIfRoundsOver,
+}) => {
+	const dragElement = useRef()
 	const draggedRole = useRef()
 	const draggedPlayer = useRef()
 	const dropOnPlayer = useRef()
 	const currentRound = useRef()
 	const roundDrop = useRef()
+
+	console.log(players)
 
 	const switchRoles = (id1, id2, round) => {
 		const role1 = draggedRole.current
@@ -33,25 +46,25 @@ const MainTable = ({ players, rounds, roles, changeRole, changeName, makeDead, m
 		e.dataTransfer.effectAllowed = 'move'
 		e.dataTransfer.dropEffect = 'move'
 		e.target.style.border = '2px solid #353a40'
+		dragElement.current = e.target
 		roundDrop.current = round
 		dropOnPlayer.current = playerId
 	}
 
 	const handleDragLeave = (e) => {
 		e.preventDefault()
-		console.log('DRag leave')
 		e.target.style.border = '2px solid transparent'
 	}
 
 	const handleDrop = (e) => {
-		console.log('drop')
 		if (currentRound.current !== roundDrop.current) {
 			console.warn('You can only drop in the same round')
 			e.preventDefault()
 			return
 		} else {
-			console.log(e)
 			e.target.style.border = '2px solid transparent'
+			e.target.classList.add('wobble-ver-right')
+			dragElement.current.classList.add('wobble-ver-left')
 			switchRoles(draggedPlayer.current, dropOnPlayer.current, currentRound.current)
 		}
 	}
@@ -81,7 +94,7 @@ const MainTable = ({ players, rounds, roles, changeRole, changeName, makeDead, m
 			<div className="table-responsive">
 				<table className="table table-bordered align-middle">
 					<thead className="thead-light">
-						<TableHead rounds={rounds} />
+						<TableHead {...{ players, rounds, setPlayers, checkIfRoundsOver }} />
 					</thead>
 					<tbody>{playerRows}</tbody>
 				</table>

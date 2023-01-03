@@ -473,6 +473,8 @@ const FrontPage = () => {
 				/>
 				<MainTable
 					players={players}
+					setPlayers={setPlayers}
+					checkIfRoundsOver={checkIfRoundsOver}
 					roles={roles}
 					rounds={rounds}
 					changeRole={changeRole}
