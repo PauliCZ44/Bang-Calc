@@ -18,9 +18,7 @@ const TableHead = ({ rounds, players, setPlayers, checkIfRoundsOver }) => {
 
 	function addAnimationClassToAllRoles(round) {
 		const trs = document.querySelectorAll('table tbody tr')
-		console.log(trs)
 		trs.forEach((tr) => {
-			console.log(round)
 			tr.querySelectorAll('td .draggable-role')[round].classList.add('shake')
 		})
 	}
@@ -33,14 +31,11 @@ const TableHead = ({ rounds, players, setPlayers, checkIfRoundsOver }) => {
 					{`Round ${parseInt(currentRound, 10) + 1}`}
 					<button
 						onClick={() => {
-							console.log('randomize round', currentRound)
 							const shuffledRoles = getShuffledRolesInRound(currentRound)
 							const newPlayers = players.map((player, index) => {
 								player.roles[currentRound] = shuffledRoles[index]
 								return player
 							})
-							console.log({ old: players })
-							console.log({ newPlayers })
 							addAnimationClassToAllRoles(currentRound)
 							setPlayers(newPlayers)
 							checkIfRoundsOver()

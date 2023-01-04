@@ -20,8 +20,6 @@ const MainTable = ({
 	const currentRound = useRef()
 	const roundDrop = useRef()
 
-	console.log(players)
-
 	const switchRoles = (id1, id2, round) => {
 		const role1 = draggedRole.current
 		const role2 = players.find((player) => player.id === id2).roles[round - 1]
@@ -38,7 +36,6 @@ const MainTable = ({
 
 	const handleDragEnter = (e, playerId, round) => {
 		if (currentRound.current !== round) {
-			console.warn('You can only drop in the same round')
 			e.preventDefault()
 			return
 		}
@@ -58,7 +55,6 @@ const MainTable = ({
 
 	const handleDrop = (e) => {
 		if (currentRound.current !== roundDrop.current) {
-			console.warn('You can only drop in the same round')
 			e.preventDefault()
 			return
 		} else {
