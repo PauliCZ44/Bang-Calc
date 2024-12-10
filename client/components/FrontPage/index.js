@@ -30,7 +30,7 @@ const POSSIBLE_ROLES = [
 ]
 
 const INITIAL_PLAYERS = [1, 2, 3, 4, 5].map(
-	(num) => new Player(`Player ${num}`, num, [POSSIBLE_ROLES[5][num - 1]], [0], [false], [false])
+	(i) => new Player(`Player ${i}`, i, [POSSIBLE_ROLES[5][i - 1]], [0], [false], [false])
 )
 
 function getMedal(placement) {
@@ -84,6 +84,8 @@ const FrontPage = () => {
 	const computeTotalScores = (pla) => {
 		// console.log('computeTotalScores called')
 		const newPlayers = [...pla]
+
+		console.log({newPlayers})
 		newPlayers.forEach((p) => {
 			// eslint-disable-next-line no-param-reassign
 			p.totalScore = p.scores.reduce((accum, score) => accum + score, 0)
@@ -93,6 +95,8 @@ const FrontPage = () => {
 
 	// When adding player, we must add scores and roles to arrays
 	const addPlayer = () => {
+		// const cont = window.confirm("Adding player will reset the roles to default order. Continue?")
+		// if (!cont) return
 		if (players.length < 8) {
 			const newRoles = []
 			const newScores = []
@@ -116,7 +120,22 @@ const FrontPage = () => {
 				newDuels
 			)
 			setRoles(POSSIBLE_ROLES[players.length + 1])
-			computeTotalScores(players.concat(newPlayer))
+
+
+			// Create new roles from scratch
+			const createClearRoles = (pli) => {
+				const toBeAssigned = []
+				for (let i = 0; i < rounds; i++) {
+					toBeAssigned.push(POSSIBLE_ROLES[8][pli])
+				}
+				return toBeAssigned
+			}
+			
+			computeTotalScores(players.concat(newPlayer).map((player, i) => {
+				player.roles = createClearRoles(i)
+				return player
+			}))
+
 			makeAndRemoveMessage('Player added !', 3, false)
 		} else {
 			makeAndRemoveMessage('Max number of players is 8 !', 3, true)
@@ -124,11 +143,26 @@ const FrontPage = () => {
 	}
 
 	const removePlayer = () => {
+		// const cont = window.confirm("Removing player will reset the roles to default order. Continue?")
+		// if (!cont) return
 		if (players.length > 2) {
 			const newPlayers = [...players]
 			newPlayers.pop()
 			// when player is removed a) remove one, b) chnage posible roles
-			computeTotalScores(newPlayers)
+
+			// Create new roles from scratch
+			const createClearRoles = (pli) => {
+				const toBeAssigned = []
+				for (let i = 0; i < rounds; i++) {
+					toBeAssigned.push(POSSIBLE_ROLES[8][pli])
+				}
+				return toBeAssigned
+			}
+			
+			computeTotalScores(newPlayers.map((player, i) => {
+				player.roles = createClearRoles(i)
+				return player
+			}))
 			setRoles(POSSIBLE_ROLES[newPlayers.length])
 			makeAndRemoveMessage('Player removed!', 3, false)
 		} else {
@@ -138,6 +172,7 @@ const FrontPage = () => {
 
 	// when adding round also players has to be updated
 	const addRound = () => {
+
 		const newPlayers = players.map((p) => {
 			const newRoles = [...p.roles]
 			const newScores = [...p.scores]
@@ -162,6 +197,8 @@ const FrontPage = () => {
 
 	// remove round, update players and remove last role from them
 	const removeRound = () => {
+		const cont = window.confirm("Removing round will reset the roles to default order. Continue?")
+		if (!cont) return
 		if (rounds > 1) {
 			const newPlayers = players.map((p) => {
 				const newRoles = [...p.roles]

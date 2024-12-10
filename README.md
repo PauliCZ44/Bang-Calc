@@ -1,5 +1,9 @@
 # Bang Score Calculator
 
+### NOTE
+
+This aplication is my final project for Full stack open course 2020. As for now (2024 and beayond) it is archived. Code written here is not really the code I would write now. But for the legacy purposes I will leave most of the code as is (only biug fixing and basic dependency updates will be done)
+
 #### Video Demo: https://youtu.be/5DNiIKSvUlI
 
 #### Description:
@@ -53,3 +57,10 @@ I wanted the app to be mobile friendly so i have chosen mobile firts approach.
 No backend yet with this app. Just front-end. In future i will maybe add backend support to store data to server, load / save tables atd. If the project will be used.
 
 Project based from this template https://github.com/fullstack-hy2020/create-app
+¨
+
+# Developement
+
+If you run into errors use this options in command line:
+
+`export NODE_OPTIONS=--openssl-legacy-provider`
